@@ -1,1 +1,19 @@
+# Directories
+/dist/
+
+# Files
+/TODO
+.DS_Store
 credentials.json
+
+# Patterns
+.*.sw[op]
+
+# Spikes
+/*/*
+!/*/*.*
+!/*/test-harness
+/*/*.exe
+/*/.*.sw[op]
+/*/.DS_Store
+/*/credentials.json

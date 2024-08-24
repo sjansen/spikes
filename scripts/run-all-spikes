@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+for I in */main.go; do
+    echo
+    echo $I
+    pushd $(dirname "$I") > /dev/null
+    echo ----------
+    if [ -x test-harness ]; then
+        ./test-harness
+    else
+        go run *.go
+    fi
+    echo ==========
+    popd > /dev/null
+    echo
+done
