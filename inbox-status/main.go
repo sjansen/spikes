@@ -125,6 +125,44 @@ func die(e error) {
 	os.Exit(1)
 }
 
+func listLabels(srv *gmail.Service) {
+	resp, err := srv.Users.Labels.List("me").Do()
+	if err != nil {
+		die(fmt.Errorf("unable to retrieve labels: %v", err))
+	}
+
+	if len(resp.Labels) == 0 {
+		fmt.Println("No labels found.")
+		return
+	}
+
+	fmt.Println("Labels:", len(resp.Labels))
+	/*
+		for _, l := range resp.Labels {
+			fmt.Printf("- %s\n", l.Name)
+		}
+	*/
+}
+
+func listMessages(srv *gmail.Service) {
+	resp, err := srv.Users.Messages.List("me").LabelIds("INBOX").MaxResults(500).Do()
+	if err != nil {
+		die(fmt.Errorf("unable to retrieve messages: %v", err))
+	}
+
+	if len(resp.Messages) == 0 {
+		fmt.Println("No messages found.")
+		return
+	}
+
+	fmt.Println("Messages:", len(resp.Messages))
+	/*
+		for _, m := range resp.Messages {
+			fmt.Printf("- %v %v\n", m.Id, m.ThreadId)
+		}
+	*/
+}
+
 func main() {
 	ctx := context.Background()
 	c, err := NewCredentials()
@@ -139,18 +177,7 @@ func main() {
 		die(fmt.Errorf("unable to retrieve Gmail client: %v", err))
 	}
 
-	resp, err := srv.Users.Labels.List("me").Do()
-	if err != nil {
-		die(fmt.Errorf("unable to retrieve labels: %v", err))
-	}
-
-	if len(resp.Labels) == 0 {
-		fmt.Println("No labels found.")
-		return
-	}
-
-	fmt.Println("Labels:")
-	for _, l := range resp.Labels {
-		fmt.Printf("- %s\n", l.Name)
-	}
+	listLabels(srv)
+	// fmt.Println("---")
+	listMessages(srv)
 }
